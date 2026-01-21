@@ -1,0 +1,99 @@
+import tkinter as tk
+import subprocess
+
+#Creates root window
+root = tk.Tk()
+
+#Sets size of root window and title
+root.geometry("640x360")
+root.title("My Window")
+
+#Function for making window buttons
+def createButton(name, text, windowID):
+    name = tk.Button(windowListFrame, text=text, bg="green", width=35, height=1, anchor='w', command=lambda: onButtonClick(windowID))
+    return name
+
+#Button click comand
+selectedWindow = "placeholder"
+def onButtonClick(windowID):
+    global selectedWindow
+    print(f"{windowID} has been selected.")
+    selectedWindow = windowID
+
+#Function for the resize window command
+def resize():
+    subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-e", "0,100,100,950,504"])
+
+#Function for the capture window command
+def capture():
+    subprocess.run(["scrot", "-w", selectedWindow, "scripted.png"])
+    subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-b", "add,hidden"])
+
+#Function for creating the list of windows
+def createList():
+    rowCount = 0
+    for window in listOfWindows:
+        newButton = createButton(window[0:10], window, window[0:10])
+        newButton.grid(row=rowCount, column=0)
+        rowCount += 1
+
+#Update list function
+def updateList():
+    rowCount = 0
+    for window in listOfWindows:
+        newButton = createButton(window[0:10], window, window[0:10])
+        newButton.grid(row=rowCount, column=0)
+        rowCount += 1
+    root.update()
+
+#Creating the display frames
+windowListFrame = tk.Frame(root, height=10, bg="red", padx=5, pady=5)
+optionsFrame = tk.Frame(root, bg="blue", padx=5, pady=5)
+outputFrame = tk.Frame(root)
+listOptionsFrame = tk.Frame(root, bg="purple", padx=5, pady=5)
+
+#Runs the wmctrl -l command and then splits each line into list items
+windowList = subprocess.run(["wmctrl", "-l"], capture_output=True, text=True)
+listOfWindows = windowList.stdout.splitlines()
+
+#Loop to go through the list of windows and make a button for each one
+# rowCount = 0
+# for window in listOfWindows:
+#     newButton = createButton(window[0:10], window, window[0:10])
+#     newButton.grid(row=rowCount, column=0)
+#     rowCount += 1
+createList()
+
+#Place the frames
+windowListFrame.grid(row=1, column=0)
+optionsFrame.grid(row=1,column=1, sticky="N")
+listOptionsFrame.grid(row=2, column=0)
+
+#Creates the entry box for custom size and disabled it.
+sizeWidth = tk.Entry(optionsFrame)
+sizeWidth.insert(0, "1280")
+sizeWidth.config(state="disabled")
+
+#Makes the check box for custom size
+customCheck = tk.Checkbutton(optionsFrame, text="Custom Size")
+
+#Button to resize window
+resizeButton = tk.Button(optionsFrame, text="Resize Window", bg="orange", command=resize)
+
+#Button to capture window
+captureButton = tk.Button(optionsFrame, text="Capture Window", bg="orange", command=capture)
+
+#Button to refresh list
+refreshButton = tk.Button(listOptionsFrame, text="Refresh", bg="orange", command=updateList)
+
+#Placing buttons
+resizeButton.grid(row=1, column=0)
+captureButton.grid(row=1, column=1)
+refreshButton.grid(row=1, column=0)
+
+#Placing the check boxes
+customCheck.grid(row=0, column=0)
+sizeWidth.grid(row=0, column=1)
+
+
+root.mainloop()
