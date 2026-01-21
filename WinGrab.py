@@ -46,16 +46,6 @@ def createList():
         newButton = createButton(window[0:10], window, window[0:10])
         newButton.grid(row=rowCount, column=0)
         rowCount += 1
-    print("List created")
-
-#Update list function
-def updateList():
-    rowCount = 0
-    for window in listOfWindows:
-        newButton = createButton(window[0:10], window, window[0:10])
-        newButton.grid(row=rowCount, column=0)
-        rowCount += 1
-    root.update()
 
 #Creating the display frames
 windowListFrame = tk.Frame(root, height=10, bg="red", padx=5, pady=5)
@@ -63,6 +53,7 @@ optionsFrame = tk.Frame(root, bg="blue", padx=5, pady=5)
 outputFrame = tk.Frame(root)
 listOptionsFrame = tk.Frame(root, bg="purple", padx=5, pady=5)
 
+#Calls function to create and display buttons for each window
 createList()
 
 #Place the frames
