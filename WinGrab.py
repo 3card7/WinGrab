@@ -13,6 +13,12 @@ def createButton(name, text, windowID):
     name = tk.Button(windowListFrame, text=text, bg="green", width=35, height=1, anchor='w', command=lambda: onButtonClick(windowID))
     return name
 
+#Function that runs the wmctrl -l command and then splits each line into list items
+def createWindowList():
+    windowList = subprocess.run(["wmctrl", "-l"], capture_output=True, text=True)
+    listOfWindows = windowList.stdout.splitlines()
+    return listOfWindows
+
 #Button click comand
 selectedWindow = "placeholder"
 def onButtonClick(windowID):
@@ -31,11 +37,16 @@ def capture():
 
 #Function for creating the list of windows
 def createList():
+    listOfWindows = createWindowList()
+    for widget in windowListFrame.winfo_children():
+        widget.destroy()
+
     rowCount = 0
     for window in listOfWindows:
         newButton = createButton(window[0:10], window, window[0:10])
         newButton.grid(row=rowCount, column=0)
         rowCount += 1
+    print("List created")
 
 #Update list function
 def updateList():
@@ -52,16 +63,6 @@ optionsFrame = tk.Frame(root, bg="blue", padx=5, pady=5)
 outputFrame = tk.Frame(root)
 listOptionsFrame = tk.Frame(root, bg="purple", padx=5, pady=5)
 
-#Runs the wmctrl -l command and then splits each line into list items
-windowList = subprocess.run(["wmctrl", "-l"], capture_output=True, text=True)
-listOfWindows = windowList.stdout.splitlines()
-
-#Loop to go through the list of windows and make a button for each one
-# rowCount = 0
-# for window in listOfWindows:
-#     newButton = createButton(window[0:10], window, window[0:10])
-#     newButton.grid(row=rowCount, column=0)
-#     rowCount += 1
 createList()
 
 #Place the frames
@@ -84,7 +85,7 @@ resizeButton = tk.Button(optionsFrame, text="Resize Window", bg="orange", comman
 captureButton = tk.Button(optionsFrame, text="Capture Window", bg="orange", command=capture)
 
 #Button to refresh list
-refreshButton = tk.Button(listOptionsFrame, text="Refresh", bg="orange", command=updateList)
+refreshButton = tk.Button(listOptionsFrame, text="Refresh", bg="orange", command=createList)
 
 #Placing buttons
 resizeButton.grid(row=1, column=0)
