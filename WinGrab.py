@@ -28,7 +28,10 @@ def onButtonClick(windowID):
 
 #Function for the resize window command
 def resize():
-    subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-e", "0,100,100,950,504"])
+    resizeWidth = sizeWidth.get()
+    resizeLength = sizeLength.get()
+    commandString = "0,100,100," + resizeWidth + "," + resizeLength
+    subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-e", commandString])
 
 #Function for the capture window command
 def capture():
@@ -50,6 +53,10 @@ def createList():
 #function for custom size checkbox behavior
 def enableCustomSize():
     if customSizeVar.get() == 0:
+        sizeWidth.delete(0, tk.END)
+        sizeLength.delete(0, tk.END)
+        sizeWidth.insert(0, "1280")
+        sizeLength.insert(0, "720")
         sizeWidth.config(state="disable")
         sizeLength.config(state="disable")
     elif customSizeVar.get() == 1:
