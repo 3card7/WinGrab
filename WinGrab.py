@@ -5,7 +5,7 @@ import subprocess
 root = tk.Tk()
 
 #Sets size of root window and title
-root.geometry("640x360")
+root.geometry("800x400")
 root.title("My Window")
 
 #Function for making window buttons
@@ -47,6 +47,15 @@ def createList():
         newButton.grid(row=rowCount, column=0)
         rowCount += 1
 
+#function for custom size checkbox behavior
+def enableCustomSize():
+    if customSizeVar.get() == 0:
+        sizeWidth.config(state="disable")
+        sizeLength.config(state="disable")
+    elif customSizeVar.get() == 1:
+        sizeWidth.config(state="normal")
+        sizeLength.config(state="normal")
+
 #Creating the display frames
 windowListFrame = tk.Frame(root, height=10, bg="red", padx=5, pady=5)
 optionsFrame = tk.Frame(root, bg="blue", padx=5, pady=5)
@@ -61,13 +70,19 @@ windowListFrame.grid(row=1, column=0)
 optionsFrame.grid(row=1,column=1, sticky="N")
 listOptionsFrame.grid(row=2, column=0)
 
-#Creates the entry box for custom size and disabled it.
-sizeWidth = tk.Entry(optionsFrame)
+#Creates the entry box for custom width and disables it.
+sizeWidth = tk.Entry(optionsFrame, width=10)
 sizeWidth.insert(0, "1280")
 sizeWidth.config(state="disabled")
 
+#Creates the entry box for custom length and disables it.
+sizeLength = tk.Entry(optionsFrame, width=10)
+sizeLength.insert(0, "720")
+sizeLength.config(state="disabled")
+
 #Makes the check box for custom size
-customCheck = tk.Checkbutton(optionsFrame, text="Custom Size")
+customSizeVar = tk.IntVar(value=0) #Starts button unchecked
+customCheck = tk.Checkbutton(optionsFrame, text="Custom Size", variable=customSizeVar, command=enableCustomSize)
 
 #Button to resize window
 resizeButton = tk.Button(optionsFrame, text="Resize Window", bg="orange", command=resize)
@@ -86,6 +101,6 @@ refreshButton.grid(row=1, column=0)
 #Placing the check boxes
 customCheck.grid(row=0, column=0)
 sizeWidth.grid(row=0, column=1)
-
+sizeLength.grid(row=0, column=2)
 
 root.mainloop()
