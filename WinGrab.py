@@ -28,8 +28,8 @@ def onButtonClick(windowID):
 
 #Function for the resize window command
 def resize():
-    resizeWidth = sizeWidth.get()
-    resizeLength = sizeLength.get()
+    resizeWidth = sizeWidthEntry.get()
+    resizeLength = sizeLengthEntry.get()
     commandString = "0,100,100," + resizeWidth + "," + resizeLength
     subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-e", commandString])
 
@@ -55,15 +55,15 @@ def createList():
 #function for custom size checkbox behavior
 def enableCustomSize():
     if customSizeVar.get() == 0:
-        sizeWidth.delete(0, tk.END)
-        sizeLength.delete(0, tk.END)
-        sizeWidth.insert(0, "1280")
-        sizeLength.insert(0, "720")
-        sizeWidth.config(state="disable")
-        sizeLength.config(state="disable")
+        sizeWidthEntry.delete(0, tk.END)
+        sizeLengthEntry.delete(0, tk.END)
+        sizeWidthEntry.insert(0, "1280")
+        sizeLengthEntry.insert(0, "720")
+        sizeWidthEntry.config(state="disable")
+        sizeLengthEntry.config(state="disable")
     elif customSizeVar.get() == 1:
-        sizeWidth.config(state="normal")
-        sizeLength.config(state="normal")
+        sizeWidthEntry.config(state="normal")
+        sizeLengthEntry.config(state="normal")
 
 #Function for file name checkbox behavior
 def enableFileName():
@@ -89,14 +89,14 @@ optionsFrame.grid(row=1,column=1, sticky="N")
 listOptionsFrame.grid(row=2, column=0)
 
 #Creates the entry box for custom width and disables it.
-sizeWidth = tk.Entry(optionsFrame, width=10)
-sizeWidth.insert(0, "1280")
-sizeWidth.config(state="disabled")
+sizeWidthEntry = tk.Entry(optionsFrame, width=10)
+sizeWidthEntry.insert(0, "1280")
+sizeWidthEntry.config(state="disabled")
 
 #Creates the entry box for custom length and disables it.
-sizeLength = tk.Entry(optionsFrame, width=10)
-sizeLength.insert(0, "720")
-sizeLength.config(state="disabled")
+sizeLengthEntry = tk.Entry(optionsFrame, width=10)
+sizeLengthEntry.insert(0, "720")
+sizeLengthEntry.config(state="disabled")
 
 #Creates the entry box for custom file name and disables it
 fileNameEntry = tk.Entry(optionsFrame, width=20)
@@ -105,7 +105,7 @@ fileNameEntry.config(state="disabled")
 
 #Makes the check box for custom size
 customSizeVar = tk.IntVar(value=0) #Starts button unchecked
-customCheck = tk.Checkbutton(optionsFrame, text="Custom Size", variable=customSizeVar, command=enableCustomSize)
+customSizeCheck = tk.Checkbutton(optionsFrame, text="Custom Size", variable=customSizeVar, command=enableCustomSize)
 
 #Makes the check box for custom file name
 fileNameVar = tk.IntVar(value=0) #Starts button unchecked
@@ -126,9 +126,9 @@ captureButton.grid(row=2, column=1)
 refreshButton.grid(row=1, column=0)
 
 #Placing the check boxes
-customCheck.grid(row=0, column=0)
-sizeWidth.grid(row=0, column=1)
-sizeLength.grid(row=0, column=2)
+customSizeCheck.grid(row=0, column=0)
+sizeWidthEntry.grid(row=0, column=1)
+sizeLengthEntry.grid(row=0, column=2)
 
 #Placing file name
 fileNameCheck.grid(row=1,column=0)
