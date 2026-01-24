@@ -35,7 +35,9 @@ def resize():
 
 #Function for the capture window command
 def capture():
-    subprocess.run(["scrot", "-w", selectedWindow, "scripted.png"])
+    fileName = fileNameEntry.get()
+    fileName = fileName + ".png"
+    subprocess.run(["scrot", "-w", selectedWindow, fileName])
     subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-b", "add,hidden"])
 
 #Function for creating the list of windows
@@ -63,6 +65,15 @@ def enableCustomSize():
         sizeWidth.config(state="normal")
         sizeLength.config(state="normal")
 
+#Function for file name checkbox behavior
+def enableFileName():
+    if fileNameVar.get() == 0:
+        fileNameEntry.delete(0, tk.END)
+        fileNameEntry.insert(0, "Screenshot")
+        fileNameEntry.config(state="disabled")
+    elif fileNameVar.get() == 1:
+        fileNameEntry.config(state="normal")
+
 #Creating the display frames
 windowListFrame = tk.Frame(root, height=10, bg="red", padx=5, pady=5)
 optionsFrame = tk.Frame(root, bg="blue", padx=5, pady=5)
@@ -87,9 +98,18 @@ sizeLength = tk.Entry(optionsFrame, width=10)
 sizeLength.insert(0, "720")
 sizeLength.config(state="disabled")
 
+#Creates the entry box for custom file name and disables it
+fileNameEntry = tk.Entry(optionsFrame, width=20)
+fileNameEntry.insert(0, "Screenshot")
+fileNameEntry.config(state="disabled")
+
 #Makes the check box for custom size
 customSizeVar = tk.IntVar(value=0) #Starts button unchecked
 customCheck = tk.Checkbutton(optionsFrame, text="Custom Size", variable=customSizeVar, command=enableCustomSize)
+
+#Makes the check box for custom file name
+fileNameVar = tk.IntVar(value=0) #Starts button unchecked
+fileNameCheck = tk.Checkbutton(optionsFrame, text="File Name", variable=fileNameVar, command=enableFileName)
 
 #Button to resize window
 resizeButton = tk.Button(optionsFrame, text="Resize Window", bg="orange", command=resize)
@@ -101,13 +121,17 @@ captureButton = tk.Button(optionsFrame, text="Capture Window", bg="orange", comm
 refreshButton = tk.Button(listOptionsFrame, text="Refresh", bg="orange", command=createList)
 
 #Placing buttons
-resizeButton.grid(row=1, column=0)
-captureButton.grid(row=1, column=1)
+resizeButton.grid(row=2, column=0)
+captureButton.grid(row=2, column=1)
 refreshButton.grid(row=1, column=0)
 
 #Placing the check boxes
 customCheck.grid(row=0, column=0)
 sizeWidth.grid(row=0, column=1)
 sizeLength.grid(row=0, column=2)
+
+#Placing file name
+fileNameCheck.grid(row=1,column=0)
+fileNameEntry.grid(row=1,column=1)
 
 root.mainloop()
