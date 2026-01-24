@@ -36,7 +36,8 @@ def resize():
 #Function for the capture window command
 def capture():
     fileName = fileNameEntry.get()
-    fileName = fileName + ".png"
+    saveLocation = saveLocationEntry.get()
+    fileName = saveLocation + "/" + fileName + ".png"
     subprocess.run(["scrot", "-w", selectedWindow, fileName])
     subprocess.run(["wmctrl", "-i", "-r", selectedWindow, "-b", "add,hidden"])
 
@@ -74,6 +75,15 @@ def enableFileName():
     elif fileNameVar.get() == 1:
         fileNameEntry.config(state="normal")
 
+#Function for save location
+def enableSaveLocation():
+    if saveLocationVar.get() == 0:
+        saveLocationEntry.delete(0, tk.END)
+        saveLocationEntry.insert(0, "/home/kali/Pictures")
+        saveLocationEntry.config(state="disabled")
+    elif saveLocationVar.get() == 1:
+        saveLocationEntry.config(state="normal")
+
 #Creating the display frames
 windowListFrame = tk.Frame(root, height=10, bg="red", padx=5, pady=5)
 optionsFrame = tk.Frame(root, bg="blue", padx=5, pady=5)
@@ -103,6 +113,11 @@ fileNameEntry = tk.Entry(optionsFrame, width=20)
 fileNameEntry.insert(0, "Screenshot")
 fileNameEntry.config(state="disabled")
 
+#Creates the entry box for save location
+saveLocationEntry = tk.Entry(optionsFrame, width=20)
+saveLocationEntry.insert(0, "/home/kali/Pictures")
+saveLocationEntry.config(state="disabled")
+
 #Makes the check box for custom size
 customSizeVar = tk.IntVar(value=0) #Starts button unchecked
 customSizeCheck = tk.Checkbutton(optionsFrame, text="Custom Size", variable=customSizeVar, command=enableCustomSize)
@@ -110,6 +125,10 @@ customSizeCheck = tk.Checkbutton(optionsFrame, text="Custom Size", variable=cust
 #Makes the check box for custom file name
 fileNameVar = tk.IntVar(value=0) #Starts button unchecked
 fileNameCheck = tk.Checkbutton(optionsFrame, text="File Name", variable=fileNameVar, command=enableFileName)
+
+#Makes the check box for save location
+saveLocationVar = tk.IntVar(value=0) #Starts button unchecked
+saveLocationCheck = tk.Checkbutton(optionsFrame, text="Save Location", variable=saveLocationVar, command=enableSaveLocation)
 
 #Button to resize window
 resizeButton = tk.Button(optionsFrame, text="Resize Window", bg="orange", command=resize)
@@ -121,8 +140,8 @@ captureButton = tk.Button(optionsFrame, text="Capture Window", bg="orange", comm
 refreshButton = tk.Button(listOptionsFrame, text="Refresh", bg="orange", command=createList)
 
 #Placing buttons
-resizeButton.grid(row=2, column=0)
-captureButton.grid(row=2, column=1)
+resizeButton.grid(row=3, column=0)
+captureButton.grid(row=3, column=1)
 refreshButton.grid(row=1, column=0)
 
 #Placing the check boxes
@@ -134,4 +153,7 @@ sizeLengthEntry.grid(row=0, column=2)
 fileNameCheck.grid(row=1,column=0)
 fileNameEntry.grid(row=1,column=1)
 
+#Placing save location
+saveLocationCheck.grid(row=2, column=0)
+saveLocationEntry.grid(row=2, column=1)
 root.mainloop()
